@@ -1,0 +1,43 @@
+{
+  "name": "project-surb-blog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.22.1",
+    "@ant-design/nextjs-registry": "^1.0.2",
+    "@auth/prisma-adapter": "^2.7.4",
+    "@prisma/client": "^6.1.0",
+    "antd": "^5.22.7",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "install": "^0.13.0",
+    "next": "15.1.3",
+    "next-auth": "^5.0.0-beta.25",
+    "next-intl": "^3.26.3",
+    "nodemailer": "^6.9.16",
+    "quill": "^2.0.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-quilljs": "^2.0.5",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/quill": "^2.0.14",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.3",
+    "postcss": "^8",
+    "prisma": "^6.1.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
