@@ -1,12 +1,9 @@
-'use server'
-
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
+import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
-import { revalidatePath } from 'next/cache'
-
-export const PostCreateService = async (
+export const BlogCreatePostService = async (
     data: Prisma.PostUncheckedCreateInput,
 ) => {
     const session = await auth()
