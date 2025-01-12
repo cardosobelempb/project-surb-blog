@@ -1,9 +1,7 @@
 'use client'
 
-import { sendPromptToGemini } from '@/lib/gemini'
 import { BlogCreateUserService } from '@/server/blog/blog-create-user.service'
 import { UseBlogAdminStore } from '@/stores/blog-admin.store'
-import { ThunderboltOutlined } from '@ant-design/icons'
 import { Prisma } from '@prisma/client'
 import {
     Button,
@@ -17,10 +15,8 @@ import {
     Select,
     Space,
     Spin,
-    theme,
-    Tooltip,
 } from 'antd'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 type Props = {
@@ -43,31 +39,7 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
     const commonTranslations = useTranslations('Common')
     const errorsTranslations = useTranslations('Errors')
 
-    const locale = useLocale()
-    const {
-        token: { colorPrimary },
-    } = theme.useToken()
-
     const onClose = () => setOpen(false)
-
-    const handleGenerate = async () => {
-        setLoading(true)
-        const response = await sendPromptToGemini({
-            prompt: `
-                Escreva um post para um blog, o tema deve ser relacionado as configurações/tema do blog: ${blogSelected?.title}; ${blogSelected?.subTitle}. Crie sempre algo diferente e não repita, na lingua ${locale}, porém responda no formato JSON.
-                Siga esse exemplo e respeite as regras abaixo:
-                {
-                    "title": "Título do post (max. 100 caracteres)",
-                    "subtitle": "Descrição do post (max. 191 caracteres)",
-                    "slug": "Slug do blog (max. 191 caracteres, siga o regex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/)",
-                    "body": "Conteúdo do post (Use HTML para formatar o conteúdo - Não use markdown)",
-                }
-            `,
-        })
-
-        form.setFieldsValue(response)
-        setLoading(false)
-    }
 
     const onFinish: FormProps<Prisma.BlogUserUncheckedCreateInput>['onFinish'] =
         async values => {
@@ -108,18 +80,7 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
             }}
             extra={
                 <Space>
-                    <Tooltip
-                        title={newBlogUserTranslations('ai_tooltip')}
-                        className="mr-2"
-                    >
-                        <Button type="text" onClick={handleGenerate}>
-                            <ThunderboltOutlined
-                                classID="text-xl"
-                                style={{ color: colorPrimary }}
-                            />
-                        </Button>
-                    </Tooltip>
-                    <Button onClick={onClose}>
+                    <Button onClick={onClose} className="px-2 border-lime-200">
                         {commonTranslations('cancel')}
                     </Button>
                     <Button
