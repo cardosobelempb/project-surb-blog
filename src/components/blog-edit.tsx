@@ -1,10 +1,5 @@
 'use client'
 
-import { sendPromptToGemini } from '@/lib/gemini'
-import { PostCreateService } from '@/server/post/post-create.service'
-import { UseBlogAdminStore } from '@/stores/blog-admin.store'
-import { ThunderboltOutlined } from '@ant-design/icons'
-import { Prisma } from '@prisma/client'
 import {
     Button,
     Col,
@@ -16,73 +11,55 @@ import {
     Row,
     Space,
     Spin,
-    theme,
-    Tooltip,
 } from 'antd'
-import { useLocale, useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
+import React, { useEffect } from 'react'
 
-import { useQuill } from 'react-quilljs'
+import { PostUpdateService } from '@/server/post/post-update.service'
+import { UseBlogAdminStore } from '@/stores/blog-admin.store'
+import { PostWithUser } from '@/types/Post'
+import { Prisma } from '@prisma/client'
+import ReactQuill from 'react-quill'
 
 type Props = {
     open: boolean
-    setOpen: (open: boolean) => void
+    onClose: () => void
+    defaultValues: PostWithUser
 }
 
-export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
-    const [loading, setLoading] = useState(false)
+type FieldType = {
+    title: string
+    subTitle: string
+    slug: string
+    content: string
+}
+
+export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
+    const [loading, setLoading] = React.useState(false)
     const [form] = Form.useForm()
     const { blogSelected } = UseBlogAdminStore()
 
-    const newPostTranslations = useTranslations('NewBlogPost')
+    const editPostTranslations = useTranslations('EditBlogPost')
     const formTranslations = useTranslations('Form')
     const commonTranslations = useTranslations('Common')
     const errorsTranslations = useTranslations('Errors')
 
-    const { Quill } = useQuill()
-
-    const locale = useLocale()
-    const {
-        token: { colorPrimary },
-    } = theme.useToken()
-
-    const onClose = () => setOpen(false)
-
-    const handleGenerate = async () => {
-        setLoading(true)
-        const response = await sendPromptToGemini({
-            prompt: `
-                Escreva um post para um blog, o tema deve ser relacionado as configurações/tema do blog: ${blogSelected?.title}; ${blogSelected?.subTitle}. Crie sempre algo diferente e não repita, na lingua ${locale}, porém responda no formato JSON.
-                Siga esse exemplo e respeite as regras abaixo:
-                {
-                    "title": "Título do post (max. 100 caracteres)",
-                    "subtitle": "Descrição do post (max. 191 caracteres)",
-                    "slug": "Slug do blog (max. 191 caracteres, siga o regex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/)",
-                    "body": "Conteúdo do post (Use HTML para formatar o conteúdo - Não use markdown)",
-                }
-            `,
-        })
-
-        form.setFieldsValue(response)
-        setLoading(false)
-    }
-
-    const onFinish: FormProps<Prisma.BlogPostUncheckedCreateInput>['onFinish'] =
+    const onFinish: FormProps<Prisma.BlogPostUncheckedUpdateInput>['onFinish'] =
         async values => {
             if (!blogSelected) return
 
             setLoading(true)
-            const blogPost = await PostCreateService({
-                ...values,
-                blogId: blogSelected.id,
-            })
+            const blogPost = await PostUpdateService(
+                defaultValues.id as string,
+                values,
+            )
             setLoading(false)
 
             if (blogPost?.error) {
                 message.error(errorsTranslations(`post/${blogPost.error}`))
             } else {
-                message.success(newPostTranslations('success'))
-                setOpen(false)
+                message.success(editPostTranslations('success'))
+                onClose()
             }
         }
 
@@ -91,12 +68,19 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             form.resetFields()
         }
         handleResetFields()
-    }, [blogSelected, form])
+    }, [form])
+
+    useEffect(() => {
+        const handleSetFields = () => {
+            form.setFieldsValue(defaultValues)
+        }
+        handleSetFields()
+    }, [defaultValues, form, open])
 
     return (
         <Drawer
-            title={newPostTranslations('title')}
-            width={600}
+            title={editPostTranslations('title')}
+            width={520}
             onClose={onClose}
             open={open}
             styles={{
@@ -106,17 +90,6 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             }}
             extra={
                 <Space>
-                    <Tooltip
-                        title={newPostTranslations('ai_tooltip')}
-                        className="mr-2"
-                    >
-                        <Button type="text" onClick={handleGenerate}>
-                            <ThunderboltOutlined
-                                classID="text-xl"
-                                style={{ color: colorPrimary }}
-                            />
-                        </Button>
-                    </Tooltip>
                     <Button onClick={onClose}>
                         {commonTranslations('cancel')}
                     </Button>
@@ -139,7 +112,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                 >
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
+                            <Form.Item<FieldType>
                                 name="title"
                                 label={formTranslations('title_label')}
                                 rules={[{ required: true, max: 100 }]}
@@ -154,7 +127,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
+                            <Form.Item<FieldType>
                                 name="subTitle"
                                 label={formTranslations('subtitle_label')}
                                 rules={[{ max: 191 }]}
@@ -169,7 +142,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
+                            <Form.Item<FieldType>
                                 name="slug"
                                 label={formTranslations('slug_label')}
                                 rules={[
@@ -184,23 +157,23 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                                     showCount
                                     maxLength={60}
                                     addonBefore="/"
-                                    placeholder="Ex: publicacão x"
+                                    placeholder="Ex: publicacao-x"
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
+                            <Form.Item<FieldType>
                                 name="content"
-                                label={formTranslations('body_label')}
+                                label={formTranslations('content_label')}
                                 rules={[{ required: true }]}
                             >
-                                <Quill
+                                <ReactQuill
                                     theme="snow"
                                     value={form.getFieldValue('content')}
-                                    onChange={(value: string) =>
-                                        form.setFieldsValue({ content: value })
+                                    onChange={valeu =>
+                                        form.setFieldsValue({ content: valeu })
                                     }
                                 />
                             </Form.Item>

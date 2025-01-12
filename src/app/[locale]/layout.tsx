@@ -4,6 +4,7 @@ import './globals.css'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { Providers } from './providers'
+import 'quill/dist/quill.snow.css'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',

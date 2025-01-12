@@ -103,7 +103,7 @@
         "email_label": "Seu Email",
         "user_email_label": "Email do Usuário",
         "role_label": "Permissão",
-        "body_label": "Conteúdo",
+        "content_label": "Conteúdo",
         "author_label": "Autor",
         "validate_messages": {
             "required": "Por favor, preencha este campo!"

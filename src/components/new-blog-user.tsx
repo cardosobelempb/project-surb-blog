@@ -1,7 +1,7 @@
 'use client'
 
 import { sendPromptToGemini } from '@/lib/gemini'
-import { PostCreateService } from '@/server/post/post-create.service'
+import { BlogCreateUserService } from '@/server/blog/blog-create-user.service'
 import { UseBlogAdminStore } from '@/stores/blog-admin.store'
 import { ThunderboltOutlined } from '@ant-design/icons'
 import { Prisma } from '@prisma/client'
@@ -14,6 +14,7 @@ import {
     Input,
     message,
     Row,
+    Select,
     Space,
     Spin,
     theme,
@@ -22,24 +23,25 @@ import {
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
-import { useQuill } from 'react-quilljs'
-
 type Props = {
     open: boolean
     setOpen: (open: boolean) => void
 }
 
-export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
+type FieldType = {
+    email: string
+    role: Prisma.BlogUserUncheckedCreateInput['role']
+}
+
+export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
     const { blogSelected } = UseBlogAdminStore()
 
-    const newPostTranslations = useTranslations('NewBlogPost')
+    const newBlogUserTranslations = useTranslations('NewBlogUser')
     const formTranslations = useTranslations('Form')
     const commonTranslations = useTranslations('Common')
     const errorsTranslations = useTranslations('Errors')
-
-    const { Quill } = useQuill()
 
     const locale = useLocale()
     const {
@@ -67,21 +69,21 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
         setLoading(false)
     }
 
-    const onFinish: FormProps<Prisma.BlogPostUncheckedCreateInput>['onFinish'] =
+    const onFinish: FormProps<Prisma.BlogUserUncheckedCreateInput>['onFinish'] =
         async values => {
             if (!blogSelected) return
 
             setLoading(true)
-            const blogPost = await PostCreateService({
+            const blogUser = await BlogCreateUserService({
                 ...values,
                 blogId: blogSelected.id,
             })
             setLoading(false)
 
-            if (blogPost?.error) {
-                message.error(errorsTranslations(`post/${blogPost.error}`))
+            if (blogUser?.error) {
+                message.error(errorsTranslations(`blog/${blogUser.error}`))
             } else {
-                message.success(newPostTranslations('success'))
+                message.success(newBlogUserTranslations('success'))
                 setOpen(false)
             }
         }
@@ -91,12 +93,12 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             form.resetFields()
         }
         handleResetFields()
-    }, [blogSelected, form])
+    }, [form])
 
     return (
         <Drawer
-            title={newPostTranslations('title')}
-            width={600}
+            title={newBlogUserTranslations('title')}
+            width={520}
             onClose={onClose}
             open={open}
             styles={{
@@ -107,7 +109,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             extra={
                 <Space>
                     <Tooltip
-                        title={newPostTranslations('ai_tooltip')}
+                        title={newBlogUserTranslations('ai_tooltip')}
                         className="mr-2"
                     >
                         <Button type="text" onClick={handleGenerate}>
@@ -139,69 +141,42 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                 >
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
-                                name="title"
-                                label={formTranslations('title_label')}
-                                rules={[{ required: true, max: 100 }]}
+                            <Form.Item<FieldType>
+                                name="email"
+                                label={formTranslations('user_email_label')}
+                                rules={[{ required: true, max: 191 }]}
                             >
                                 <Input
                                     showCount
                                     maxLength={100}
-                                    placeholder="Ex: Publicação X"
+                                    placeholder="Ex: email@email.com"
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
-                                name="subTitle"
+                            <Form.Item<FieldType>
+                                name="role"
                                 label={formTranslations('subtitle_label')}
                                 rules={[{ max: 191 }]}
                             >
-                                <Input
-                                    showCount
-                                    maxLength={191}
-                                    placeholder="Ex: Uma publicação de teste"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
-                                name="slug"
-                                label={formTranslations('slug_label')}
-                                rules={[
-                                    {
-                                        required: true,
-                                        max: 60,
-                                        pattern: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    showCount
-                                    maxLength={60}
-                                    addonBefore="/"
-                                    placeholder="Ex: publicacão x"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item<Prisma.BlogPostUncheckedCreateInput>
-                                name="content"
-                                label={formTranslations('body_label')}
-                                rules={[{ required: true }]}
-                            >
-                                <Quill
-                                    theme="snow"
-                                    value={form.getFieldValue('content')}
-                                    onChange={(value: string) =>
-                                        form.setFieldsValue({ content: value })
-                                    }
+                                <Select
+                                    placeholder="Ex: Editor"
+                                    options={[
+                                        {
+                                            value: 'ADMIN',
+                                            label: commonTranslations('admin'),
+                                        },
+                                        {
+                                            value: 'AUTHOR',
+                                            label: commonTranslations('author'),
+                                        },
+                                        {
+                                            value: 'EDITOR',
+                                            label: commonTranslations('editor'),
+                                        },
+                                    ]}
                                 />
                             </Form.Item>
                         </Col>

@@ -103,7 +103,7 @@
         "email_label": "Your Email",
         "user_email_label": "Email",
         "role_label": "Role",
-        "body_label": "Body",
+        "content_label": "Content",
         "author_label": "Author",
         "validate_messages": {
             "required": "Please fill in this field!"

@@ -23,7 +23,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     users         BlogUser[]
-    posts         Post[]
+    posts         BlogPost[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -88,7 +88,7 @@ model Blog {
     updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp
     deletedAt DateTime?  @map("delete_at") @db.Timestamp
     users     BlogUser[]
-    posts     Post[]
+    posts     BlogPost[]
 
     @@map("blogs")
 }
@@ -114,7 +114,7 @@ model BlogUser {
     @@map("blog_users")
 }
 
-model Post {
+model BlogPost {
     id        String    @id @default(uuid()) @db.Uuid
     title     String    @db.VarChar(100)
     subTitle  String?   @map("sub_title") @db.VarChar(100)

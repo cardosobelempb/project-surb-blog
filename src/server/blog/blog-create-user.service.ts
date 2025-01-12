@@ -1,17 +1,15 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { BlogUser } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
-export const BlogCreateUserService = async ({
-    data,
-}: {
-    data: { email: string; blogId: string; role: BlogUser['role'] }
-}) => {
+export const BlogCreateUserService = async (
+    data: Prisma.BlogUserUncheckedCreateInput,
+) => {
     const user = await prisma.user.findUnique({
         where: {
-            email: data.email,
+            id: data.userId,
         },
     })
 
