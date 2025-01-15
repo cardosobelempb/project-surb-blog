@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { Providers } from './providers'
 import 'quill/dist/quill.snow.css'
+import '@ant-design/v5-patch-for-react-19'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',

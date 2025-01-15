@@ -66,11 +66,17 @@ export const SignIn: React.FC = () => {
                         rules={[{ required: true }]}
                         required
                     >
-                        <Input placeholder="Ex: email@email.com" />
+                        <Input
+                            className="px-3 py-3 shadow text-lg"
+                            placeholder="Ex: email@email.com"
+                        />
                     </Form.Item>
 
                     <Form.Item className="pt-2">
-                        <Button type="primary">
+                        <Button
+                            type="primary"
+                            className="px-3 py-6 bg-slate-800 text-slate-200 dark:bg-slate-200 dark:text-slate-800"
+                        >
                             {signinTranslation('btn_label', {
                                 provider: 'email',
                             })}
@@ -83,29 +89,31 @@ export const SignIn: React.FC = () => {
                 <Space className="w-full" direction="vertical" size={16}>
                     <Button
                         block
-                        className="font-semibold py-[17px"
+                        className="border dark:border-none flex gap-2 font-semibold px-3 py-6 bg-white text-blue-950 dark:bg-blue-950 dark:text-white"
                         onClick={() => handleSignInProvider('google')}
                     >
                         {signinTranslation('btn_label', { provider: 'Google' })}
-                        <Image src={GoogleIcon} alt="Google" width={18} />
+                        <Image src={GoogleIcon} alt="Google" width={24} />
                     </Button>
                     <Button
                         block
-                        className="font-semibold py-[17px"
+                        className="flex gap-2 font-semibold px-3 py-6 bg-blue-950 text-white dark:bg-white dark:text-blue-950 "
                         onClick={() => handleSignInProvider('facebbok')}
                     >
                         {signinTranslation('btn_label', {
                             provider: 'Facebook',
                         })}
-                        <Image src={FacebookIcon} alt="Facebook" width={18} />
+                        <Image
+                            src={FacebookIcon}
+                            alt="Facebook"
+                            width={24}
+                            className=""
+                        />
                     </Button>
 
                     <p className="mt-7 text-center">
                         {signinTranslation('no_account')}
-                        <Link
-                            href={`/auth/signup`}
-                            className="text-blue-500 ml-1"
-                        >
+                        <Link href={`/auth/signup`} className="ml-1">
                             {signinTranslation('btn_no_account_label')}
                         </Link>
                     </p>
