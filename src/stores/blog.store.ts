@@ -8,7 +8,7 @@ export type BlogActions = {
     setBlog: (blog: Blog | null) => void
 }
 
-export const UseBlogStore = create<BlogState & BlogActions>(set => ({
+export const useBlogStore = create<BlogState & BlogActions>(set => ({
     blog: null,
     setBlog: blog => set({ blog }),
 }))

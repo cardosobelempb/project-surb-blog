@@ -1,9 +1,9 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import NextAuth from 'next-auth'
-import prisma from './db'
-import Nodemailer from 'next-auth/providers/nodemailer'
-import Google from 'next-auth/providers/google'
 import Facebbok from 'next-auth/providers/facebook'
+import Google from 'next-auth/providers/google'
+import Nodemailer from 'next-auth/providers/nodemailer'
+import prisma from './db'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),

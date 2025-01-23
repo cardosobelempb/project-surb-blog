@@ -9,17 +9,19 @@ export const AuthError = () => {
     const {
         token: { red5 },
     } = theme.useToken()
-    const t = useTranslations('AuthErrorPage')
+    const AUTH_TRANSLATION = useTranslations('AuthErrorPage')
     return (
         <Result
             status={'error'}
             icon={<CloseCircleFilled style={{ color: red5 }} />}
-            title={t('title')}
-            subTitle={t('subtitle')}
+            title={AUTH_TRANSLATION('title')}
+            subTitle={AUTH_TRANSLATION('subtitle')}
             className="max-w-3xl"
             extra={
                 <Link href={'/auth/signin'}>
-                    <Button type="primary">{t('btn_label')}</Button>
+                    <Button type="primary">
+                        {AUTH_TRANSLATION('btn_label')}
+                    </Button>
                 </Link>
             }
         />

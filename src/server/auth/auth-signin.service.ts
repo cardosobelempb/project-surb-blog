@@ -4,14 +4,14 @@ import { signIn } from '@/lib/auth'
 import prisma from '@/lib/db'
 import { redirect } from '@/lib/navigation'
 
-export const AuthSignInService = async ({
-    data,
-}: {
-    data: { email: string }
-}) => {
+export type AuthSignInProps = {
+    email: string
+}
+
+export const AuthSignInService = async ({ email }: AuthSignInProps) => {
     const user = await prisma.user.findUnique({
         where: {
-            email: data.email,
+            email,
         },
     })
 
@@ -19,7 +19,7 @@ export const AuthSignInService = async ({
 
     // Send email verification link
     await signIn('nodemailer', {
-        email: data.email,
+        email,
         redirect: false,
     })
 

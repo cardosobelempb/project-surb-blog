@@ -1,21 +1,21 @@
 'use client'
 
+import Brand from '@/assets/imgs/logo.svg'
 import { Link } from '@/lib/navigation'
+import { useBlogStore } from '@/stores/blog.store'
+import { Blog } from '@prisma/client'
 import { Layout } from 'antd'
 import Image from 'next/image'
-import Brand from '@/assets/imgs/logo.svg'
+import { useEffect } from 'react'
 import { LocaleDropdown } from './locale.dropdown'
 import { ToogleTheme } from './toogle.theme'
-import { Blog } from '@prisma/client'
-import { UseBlogStore } from '@/stores/blog.store'
-import { useEffect } from 'react'
 
 type Props = { children: React.ReactNode; blog: Blog }
 
 export const BlogLayout: React.FC<Props> = ({ children, blog }) => {
     const { Header, Footer, Content } = Layout
 
-    const { setBlog } = UseBlogStore()
+    const { setBlog } = useBlogStore()
 
     useEffect(() => {
         setBlog(blog)
@@ -30,6 +30,7 @@ export const BlogLayout: React.FC<Props> = ({ children, blog }) => {
                             src={Brand}
                             alt="Logo - Surb BLOG"
                             width={150}
+                            height={150}
                             priority
                         />
                     </Link>

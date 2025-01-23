@@ -15,7 +15,8 @@ type Props = {
 export const HomePage: React.FC<Props> = ({ blogs }) => {
     const [newBlogOpen, setNewBlogOpen] = useState(false)
     const { data: session } = useSession()
-    const t = useTranslations('HomePage')
+
+    const HOME_TRANSLATIONS = useTranslations('HomePage')
 
     const handleShowNewBlog = () => setNewBlogOpen(true)
 
@@ -24,13 +25,13 @@ export const HomePage: React.FC<Props> = ({ blogs }) => {
             <NewBlog open={newBlogOpen} setOpen={setNewBlogOpen} />
             <div className="text-center border-b border-b-slate-300 dark:border-b-slate-700 pb-3 space-y-1">
                 <span className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-                    {t('title', { name: session?.user?.name })}
+                    {HOME_TRANSLATIONS('title', { name: session?.user?.name })}
                 </span>
-                <p className="ml-4">{t('description')}</p>
+                <p className="ml-4">{HOME_TRANSLATIONS('description')}</p>
             </div>
             <div className="py-4 px-1">
                 <Button type="primary" block onClick={handleShowNewBlog}>
-                    {t('btn_label')}
+                    {HOME_TRANSLATIONS('btn_label')}
                     <PlusOutlined />
                 </Button>
 
@@ -43,7 +44,7 @@ export const HomePage: React.FC<Props> = ({ blogs }) => {
                                 className="text-slate-600 dark:text-slate-300"
                             >
                                 <Tooltip
-                                    title={t('tootip´_title')}
+                                    title={HOME_TRANSLATIONS('tooltip_title')}
                                     arrow={false}
                                 >
                                     <div className="space-y-2 border border-slate-300 dark:border-x-slate-700 w-fit py-3 px-5 rounded-lg cursor-pointer hover:bg-slate-200/60 hover:dark:bg-slate-800">

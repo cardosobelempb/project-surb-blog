@@ -2,14 +2,13 @@
 
 import { Dropdown, Space } from 'antd'
 import { useLocale } from 'next-intl'
-// import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { CaretDownFilled } from '@ant-design/icons'
 import { intl } from '@/config/intl'
-import { Link } from '@/lib/navigation'
+import { Link, usePathname } from '@/lib/navigation'
 
 export const LocaleDropdown = () => {
-    // const pathname = usePathname()
+    const pathname = usePathname()
     const locale = useLocale()
 
     return (
@@ -19,7 +18,7 @@ export const LocaleDropdown = () => {
                     return {
                         key: data.locale,
                         label: (
-                            <Link href={data.locale} locale={data.locale}>
+                            <Link href={`${pathname}`} locale={data.locale}>
                                 {data.label}
                             </Link>
                         ),

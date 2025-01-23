@@ -20,6 +20,7 @@ export const HomeLayout: React.FC<{ children: React.ReactNode }> = ({
                             src={Brand}
                             alt="Logo - Surb BLOG"
                             width={150}
+                            height={150}
                             priority
                         />
                     </Link>

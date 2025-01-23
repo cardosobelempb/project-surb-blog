@@ -11,7 +11,7 @@ export type BlogAdminActions = {
     setBlogSelected: (blog: BlogUsersWithUsers | null) => void
 }
 
-export const UseBlogAdminStore = create<BlogAdminState & BlogAdminActions>(
+export const useBlogAdminStore = create<BlogAdminState & BlogAdminActions>(
     set => ({
         blogs: [],
         blogSelected: null,

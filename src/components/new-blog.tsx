@@ -3,6 +3,7 @@
 import { sendPromptToGemini } from '@/lib/gemini'
 import { BlogCreateService } from '@/server/blog/blog-create.service'
 import { ThunderboltOutlined } from '@ant-design/icons'
+import { Prisma } from '@prisma/client'
 import {
     Button,
     Col,
@@ -25,31 +26,30 @@ type Props = {
     setOpen: (open: boolean) => void
 }
 
-type FieldType = {
-    title: string
-    subTitle: string
-    slug: string
-    bgColor: string
-    textColor: string
-}
+// type FieldType = {
+//     title: string
+//     subTitle: string
+//     slug: string
+//     bgColor: string
+//     textColor: string
+// }
 
 export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
-
-    const newBlogTranslations = useTranslations('NewBlog')
-    const formTranslations = useTranslations('Form')
-    const commonTranslations = useTranslations('Common')
-    const errorsTranslations = useTranslations('Errors')
-
     const locale = useLocale()
     const {
         token: { colorPrimary },
     } = theme.useToken()
 
+    const NEW_BLOG_TRANSLATIONS = useTranslations('NewBlog')
+    const FORM_TRANSLATIONS = useTranslations('Form')
+    const COMMON_TRANSLATIONS = useTranslations('Common')
+    const ERRORS_TRANSLATIONS = useTranslations('Errors')
+
     const onClose = () => setOpen(false)
 
-    const handleGenerate = async () => {
+    const handleGenerateGemini = async () => {
         setLoading(true)
         const response = await sendPromptToGemini({
             prompt: `
@@ -67,19 +67,20 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
         setLoading(false)
     }
 
-    const onFinish: FormProps<FieldType>['onFinish'] = async values => {
-        setLoading(true)
-        const blog = await BlogCreateService({ data: values })
-        setLoading(false)
+    const onFinish: FormProps<Prisma.BlogUncheckedCreateInput>['onFinish'] =
+        async values => {
+            setLoading(true)
+            const blog = await BlogCreateService({ data: values })
+            setLoading(false)
 
-        if (blog?.error) {
-            message.error(errorsTranslations(`blog/${blog.error}`))
+            if (blog?.error) {
+                message.error(ERRORS_TRANSLATIONS(`blog/${blog.error}`), 5)
+            }
         }
-    }
 
     return (
         <Drawer
-            title={newBlogTranslations('title')}
+            title={NEW_BLOG_TRANSLATIONS('title')}
             width={720}
             onClose={onClose}
             open={open}
@@ -91,10 +92,10 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
             extra={
                 <Space>
                     <Tooltip
-                        title={newBlogTranslations('ai_tooltip')}
+                        title={NEW_BLOG_TRANSLATIONS('ai_tooltip')}
                         className="mr-2"
                     >
-                        <Button type="text" onClick={handleGenerate}>
+                        <Button type="text" onClick={handleGenerateGemini}>
                             <ThunderboltOutlined
                                 classID="text-xl"
                                 style={{ color: colorPrimary }}
@@ -102,14 +103,14 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
                         </Button>
                     </Tooltip>
                     <Button onClick={onClose}>
-                        {commonTranslations('cancel')}
+                        {COMMON_TRANSLATIONS('cancel')}
                     </Button>
                     <Button
                         type="primary"
                         onClick={form.submit}
                         loading={loading}
                     >
-                        {commonTranslations('save')}
+                        {COMMON_TRANSLATIONS('save')}
                     </Button>
                 </Space>
             }
@@ -127,18 +128,18 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
                 >
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item<FieldType>
+                            <Form.Item<Prisma.BlogUncheckedCreateInput>
                                 name="title"
-                                label={formTranslations('title_label')}
+                                label={FORM_TRANSLATIONS('title_label')}
                                 rules={[{ required: true, max: 60 }]}
                             >
                                 <Input showCount maxLength={60} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item<FieldType>
+                            <Form.Item<Prisma.BlogUncheckedCreateInput>
                                 name="slug"
-                                label={formTranslations('slug_label')}
+                                label={FORM_TRANSLATIONS('slug_label')}
                                 rules={[
                                     {
                                         required: true,
@@ -159,18 +160,18 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item<FieldType>
+                            <Form.Item<Prisma.BlogUncheckedCreateInput>
                                 name="bgColor"
-                                label={formTranslations('bg_color_label')}
+                                label={FORM_TRANSLATIONS('bg_color_label')}
                                 rules={[{ required: true, max: 45 }]}
                             >
                                 <Input style={{ width: '100%' }} type="color" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item<FieldType>
+                            <Form.Item<Prisma.BlogUncheckedCreateInput>
                                 name="textColor"
-                                label={formTranslations('text_color_label')}
+                                label={FORM_TRANSLATIONS('text_color_label')}
                                 rules={[{ required: true, max: 45 }]}
                             >
                                 <Input style={{ width: '100%' }} type="color" />
@@ -179,9 +180,9 @@ export const NewBlog: React.FC<Props> = ({ open, setOpen }) => {
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <Form.Item<FieldType>
+                            <Form.Item<Prisma.BlogUncheckedCreateInput>
                                 name="subTitle"
-                                label={formTranslations('subtitle_label')}
+                                label={FORM_TRANSLATIONS('subtitle_label')}
                                 rules={[{ max: 191 }]}
                             >
                                 <Input.TextArea

@@ -1,7 +1,7 @@
 'use client'
 
 import { BlogCreateUserService } from '@/server/blog/blog-create-user.service'
-import { UseBlogAdminStore } from '@/stores/blog-admin.store'
+import { useBlogAdminStore } from '@/stores/blog-admin.store'
 import { Prisma } from '@prisma/client'
 import {
     Button,
@@ -32,12 +32,12 @@ type FieldType = {
 export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
-    const { blogSelected } = UseBlogAdminStore()
+    const { blogSelected } = useBlogAdminStore()
 
-    const newBlogUserTranslations = useTranslations('NewBlogUser')
-    const formTranslations = useTranslations('Form')
-    const commonTranslations = useTranslations('Common')
-    const errorsTranslations = useTranslations('Errors')
+    const NEW_BLOG_USER_TRANSLATIONS = useTranslations('NewBlogUser')
+    const FORM_TRANSLATIONS = useTranslations('Form')
+    const COMMON_TRANSLATIONS = useTranslations('Common')
+    const ERRORS_TRANSLATIONS = useTranslations('Errors')
 
     const onClose = () => setOpen(false)
 
@@ -53,9 +53,9 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
             setLoading(false)
 
             if (blogUser?.error) {
-                message.error(errorsTranslations(`blog/${blogUser.error}`))
+                message.error(ERRORS_TRANSLATIONS(`blog/${blogUser.error}`))
             } else {
-                message.success(newBlogUserTranslations('success'))
+                message.success(NEW_BLOG_USER_TRANSLATIONS('success'))
                 setOpen(false)
             }
         }
@@ -69,7 +69,7 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
 
     return (
         <Drawer
-            title={newBlogUserTranslations('title')}
+            title={NEW_BLOG_USER_TRANSLATIONS('title')}
             width={520}
             onClose={onClose}
             open={open}
@@ -81,14 +81,14 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
             extra={
                 <Space>
                     <Button onClick={onClose} className="px-2 border-lime-200">
-                        {commonTranslations('cancel')}
+                        {COMMON_TRANSLATIONS('cancel')}
                     </Button>
                     <Button
                         type="primary"
                         onClick={form.submit}
                         loading={loading}
                     >
-                        {commonTranslations('save')}
+                        {COMMON_TRANSLATIONS('save')}
                     </Button>
                 </Space>
             }
@@ -104,7 +104,7 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="email"
-                                label={formTranslations('user_email_label')}
+                                label={FORM_TRANSLATIONS('user_email_label')}
                                 rules={[{ required: true, max: 191 }]}
                             >
                                 <Input
@@ -119,7 +119,7 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="role"
-                                label={formTranslations('subtitle_label')}
+                                label={FORM_TRANSLATIONS('subtitle_label')}
                                 rules={[{ max: 191 }]}
                             >
                                 <Select
@@ -127,15 +127,19 @@ export const NewBlogUser: React.FC<Props> = ({ open, setOpen }) => {
                                     options={[
                                         {
                                             value: 'ADMIN',
-                                            label: commonTranslations('admin'),
+                                            label: COMMON_TRANSLATIONS('admin'),
                                         },
                                         {
                                             value: 'AUTHOR',
-                                            label: commonTranslations('author'),
+                                            label: COMMON_TRANSLATIONS(
+                                                'author',
+                                            ),
                                         },
                                         {
                                             value: 'EDITOR',
-                                            label: commonTranslations('editor'),
+                                            label: COMMON_TRANSLATIONS(
+                                                'editor',
+                                            ),
                                         },
                                     ]}
                                 />

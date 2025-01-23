@@ -4,20 +4,21 @@ import { useTheme } from '@/hooks/use-theme.hook'
 import { StyleProvider } from '@ant-design/cssinjs'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { theme as antdTheme, ConfigProvider } from 'antd'
+import enUS from 'antd/locale/en_US'
+import ptBR from 'antd/locale/pt_BR'
 import { useLocale } from 'next-intl'
 import { useEffect } from 'react'
-import ptBr from 'antd/locale/pt_BR'
-import enUs from 'antd/locale/en_US'
 import 'quill/dist/quill.snow.css'
+import '@ant-design/v5-patch-for-react-19'
 
 const { defaultAlgorithm, darkAlgorithm } = antdTheme
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
     const { theme, getSatedTheme } = useTheme()
     const locale = useLocale()
+
     useEffect(() => {
         getSatedTheme()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -28,7 +29,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
                         algorithm:
                             theme === 'dark' ? darkAlgorithm : defaultAlgorithm,
                     }}
-                    locale={locale === 'pt-BR' ? ptBr : enUs}
+                    locale={locale === 'pt-BR' ? ptBR : enUS}
                 >
                     {children}
                 </ConfigProvider>

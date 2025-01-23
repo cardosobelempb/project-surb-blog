@@ -9,17 +9,19 @@ export const VerifyEmail = () => {
     const {
         token: { colorPrimary },
     } = theme.useToken()
-    const t = useTranslations('VerifyEmailPage')
+    const VERIFY_EMAIL_TRANSLATIONS = useTranslations('VerifyEmailPage')
     return (
         <Result
             status={'info'}
             icon={<InfoCircleOutlined style={{ color: colorPrimary }} />}
-            title={t('title')}
-            subTitle={t('subtitle')}
+            title={VERIFY_EMAIL_TRANSLATIONS('title')}
+            subTitle={VERIFY_EMAIL_TRANSLATIONS('subtitle')}
             className="max-w-3xl"
             extra={
                 <Link href={'/auth/signin'}>
-                    <Button type="primary">{t('btn_label')}</Button>
+                    <Button type="primary">
+                        {VERIFY_EMAIL_TRANSLATIONS('btn_label')}
+                    </Button>
                 </Link>
             }
         />

@@ -9,7 +9,7 @@ export type ThemeActions = {
     setTheme: (theme: Theme) => void
 }
 
-export const UseThemeStore = create<ThemeState & ThemeActions>(set => ({
+export const useThemeStore = create<ThemeState & ThemeActions>(set => ({
     theme: 'light',
     setTheme: theme => set({ theme }),
 }))

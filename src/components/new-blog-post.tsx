@@ -2,7 +2,7 @@
 
 import { sendPromptToGemini } from '@/lib/gemini'
 import { PostCreateService } from '@/server/post/post-create.service'
-import { UseBlogAdminStore } from '@/stores/blog-admin.store'
+import { useBlogAdminStore } from '@/stores/blog-admin.store'
 import { ThunderboltOutlined } from '@ant-design/icons'
 import { Prisma } from '@prisma/client'
 import {
@@ -21,8 +21,7 @@ import {
 } from 'antd'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-
-import { useQuill } from 'react-quilljs'
+import Quill from 'react-quill'
 
 type Props = {
     open: boolean
@@ -32,14 +31,12 @@ type Props = {
 export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
-    const { blogSelected } = UseBlogAdminStore()
+    const { blogSelected } = useBlogAdminStore()
 
-    const newPostTranslations = useTranslations('NewBlogPost')
-    const formTranslations = useTranslations('Form')
-    const commonTranslations = useTranslations('Common')
-    const errorsTranslations = useTranslations('Errors')
-
-    const { Quill } = useQuill()
+    const NEW_POST_TRANSLATIONS = useTranslations('NewBlogPost')
+    const FORM_TRANSLATIONS = useTranslations('Form')
+    const COMMON_TRANSLATIONS = useTranslations('Common')
+    const ERRORS_TRANSLATIONS = useTranslations('Errors')
 
     const locale = useLocale()
     const {
@@ -56,7 +53,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                 Siga esse exemplo e respeite as regras abaixo:
                 {
                     "title": "Título do post (max. 100 caracteres)",
-                    "subtitle": "Descrição do post (max. 191 caracteres)",
+                    "subTitle": "Descrição do post (max. 191 caracteres)",
                     "slug": "Slug do blog (max. 191 caracteres, siga o regex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/)",
                     "body": "Conteúdo do post (Use HTML para formatar o conteúdo - Não use markdown)",
                 }
@@ -79,23 +76,20 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             setLoading(false)
 
             if (blogPost?.error) {
-                message.error(errorsTranslations(`post/${blogPost.error}`))
+                message.error(ERRORS_TRANSLATIONS(`post/${blogPost.error}`))
             } else {
-                message.success(newPostTranslations('success'))
+                message.success(NEW_POST_TRANSLATIONS('success'))
                 setOpen(false)
             }
         }
 
     useEffect(() => {
-        const handleResetFields = () => {
-            form.resetFields()
-        }
-        handleResetFields()
+        form.resetFields()
     }, [blogSelected, form])
 
     return (
         <Drawer
-            title={newPostTranslations('title')}
+            title={NEW_POST_TRANSLATIONS('title')}
             width={600}
             onClose={onClose}
             open={open}
@@ -107,7 +101,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
             extra={
                 <Space>
                     <Tooltip
-                        title={newPostTranslations('ai_tooltip')}
+                        title={NEW_POST_TRANSLATIONS('ai_tooltip')}
                         className="mr-2"
                     >
                         <Button type="text" onClick={handleGenerate}>
@@ -118,14 +112,14 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                         </Button>
                     </Tooltip>
                     <Button onClick={onClose}>
-                        {commonTranslations('cancel')}
+                        {COMMON_TRANSLATIONS('cancel')}
                     </Button>
                     <Button
                         type="primary"
                         onClick={form.submit}
                         loading={loading}
                     >
-                        {commonTranslations('save')}
+                        {COMMON_TRANSLATIONS('save')}
                     </Button>
                 </Space>
             }
@@ -141,7 +135,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<Prisma.BlogPostUncheckedCreateInput>
                                 name="title"
-                                label={formTranslations('title_label')}
+                                label={FORM_TRANSLATIONS('title_label')}
                                 rules={[{ required: true, max: 100 }]}
                             >
                                 <Input
@@ -156,7 +150,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<Prisma.BlogPostUncheckedCreateInput>
                                 name="subTitle"
-                                label={formTranslations('subtitle_label')}
+                                label={FORM_TRANSLATIONS('subtitle_label')}
                                 rules={[{ max: 191 }]}
                             >
                                 <Input
@@ -171,7 +165,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<Prisma.BlogPostUncheckedCreateInput>
                                 name="slug"
-                                label={formTranslations('slug_label')}
+                                label={FORM_TRANSLATIONS('slug_label')}
                                 rules={[
                                     {
                                         required: true,
@@ -193,7 +187,7 @@ export const NewBlogPost: React.FC<Props> = ({ open, setOpen }) => {
                         <Col span={24}>
                             <Form.Item<Prisma.BlogPostUncheckedCreateInput>
                                 name="content"
-                                label={formTranslations('body_label')}
+                                label={FORM_TRANSLATIONS('body_label')}
                                 rules={[{ required: true }]}
                             >
                                 <Quill

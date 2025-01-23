@@ -3,7 +3,7 @@ import { BlogUser } from '@prisma/client'
 export const hasPermission = ({
     blogUsers,
     userId,
-    roles = [],
+    roles = ['OWNER'],
 }: {
     blogUsers: BlogUser[]
     userId: string

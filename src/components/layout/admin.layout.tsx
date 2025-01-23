@@ -1,26 +1,26 @@
 'use client'
 
-import { Link, usePathname, useRouter } from '@/lib/navigation'
-import { UseBlogAdminStore } from '@/stores/blog-admin.store'
-import { BlogUsersWithUsers } from '@/types/Blog'
-import { Button, Layout, Menu, MenuProps, Select, Breadcrumb, Spin } from 'antd'
-import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
 import Brand from '@/assets/imgs/logo.svg'
 import BrandShort from '@/assets/imgs/shortLogo.svg'
+import { Link, usePathname, useRouter } from '@/lib/navigation'
+import { hasPermission } from '@/lib/permissions'
+import { BlogFindAllService } from '@/server/blog/blog-find-all.service'
+import { useBlogAdminStore } from '@/stores/blog-admin.store'
+import { BlogUsersWithUsers } from '@/types/Blog'
 import {
     DashboardOutlined,
     FileTextOutlined,
-    UserOutlined,
-    SettingOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    SettingOutlined,
+    UserOutlined,
 } from '@ant-design/icons'
-import { hasPermission } from '@/lib/permissions'
+import { Breadcrumb, Button, Layout, Menu, MenuProps, Select, Spin } from 'antd'
 import { BreadcrumbItemType } from 'antd/es/breadcrumb/Breadcrumb'
-import { BlogFindAllService } from '@/server/blog/blog-find-all.service'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { LocaleDropdown } from './locale.dropdown'
 import { ToogleTheme } from './toogle.theme'
 
@@ -38,8 +38,8 @@ export const AdminLayout: React.FC<Props> = ({ blog, children, user }) => {
 
     const router = useRouter()
     const pathname = usePathname()
-    const t = useTranslations()
-    const { blogs, setBlogs, setBlogSelected } = UseBlogAdminStore()
+    const ADMIN_LAYOUT_TRANSLATIONS = useTranslations()
+    const { blogs, setBlogs, setBlogSelected } = useBlogAdminStore()
 
     const handleCollapse = () => setCollapsed(!collapsed)
     const formatedPathname = `/${pathname.split('/').slice(2).join('/')}`
@@ -57,7 +57,7 @@ export const AdminLayout: React.FC<Props> = ({ blog, children, user }) => {
         {
             key: '/admin/posts',
             icon: <FileTextOutlined />,
-            label: t('posts'),
+            label: ADMIN_LAYOUT_TRANSLATIONS('posts'),
             onClick: () => router.push(`/${blog}/admin/posts`),
         },
         {
@@ -74,7 +74,7 @@ export const AdminLayout: React.FC<Props> = ({ blog, children, user }) => {
         {
             key: '/admin/settings',
             icon: <SettingOutlined />,
-            label: t('settings'),
+            label: ADMIN_LAYOUT_TRANSLATIONS('settings'),
             disabled: !hasPermission({
                 blogUsers: blog.users,
                 userId: user.id as string,
@@ -94,21 +94,30 @@ export const AdminLayout: React.FC<Props> = ({ blog, children, user }) => {
                 pathname: '/admin/users',
                 items: [
                     { title: 'Dashboard', href: '/admin' },
-                    { title: t('users'), href: '/admin/users' },
+                    {
+                        title: ADMIN_LAYOUT_TRANSLATIONS('users'),
+                        href: '/admin/users',
+                    },
                 ],
             },
             {
                 pathname: '/admin/posts',
                 items: [
                     { title: 'Dashboard', href: '/admin' },
-                    { title: t('posts'), href: '/admin/posts' },
+                    {
+                        title: ADMIN_LAYOUT_TRANSLATIONS('posts'),
+                        href: '/admin/posts',
+                    },
                 ],
             },
             {
                 pathname: '/admin/settings',
                 items: [
                     { title: 'Dashboard', href: '/admin' },
-                    { title: t('settings'), href: '/admin/settings' },
+                    {
+                        title: ADMIN_LAYOUT_TRANSLATIONS('settings'),
+                        href: '/admin/settings',
+                    },
                 ],
             },
         ]
@@ -155,6 +164,7 @@ export const AdminLayout: React.FC<Props> = ({ blog, children, user }) => {
                         src={Brand}
                         alt="Logo - Surb BLOG"
                         width={150}
+                        height={150}
                         priority
                         className={`duration-300 absolute ${
                             collapsed ? 'opacity-0' : 'opacity-100'

@@ -16,7 +16,7 @@ import { useTranslations } from 'next-intl'
 import React, { useEffect } from 'react'
 
 import { PostUpdateService } from '@/server/post/post-update.service'
-import { UseBlogAdminStore } from '@/stores/blog-admin.store'
+import { useBlogAdminStore } from '@/stores/blog-admin.store'
 import { PostWithUser } from '@/types/Post'
 import { Prisma } from '@prisma/client'
 import ReactQuill from 'react-quill'
@@ -37,12 +37,12 @@ type FieldType = {
 export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
     const [loading, setLoading] = React.useState(false)
     const [form] = Form.useForm()
-    const { blogSelected } = UseBlogAdminStore()
+    const { blogSelected } = useBlogAdminStore()
 
-    const editPostTranslations = useTranslations('EditBlogPost')
-    const formTranslations = useTranslations('Form')
-    const commonTranslations = useTranslations('Common')
-    const errorsTranslations = useTranslations('Errors')
+    const EDIT_POST_TRANSLATIONS = useTranslations('EditBlogPost')
+    const FORM_TRANSLATIONS = useTranslations('Form')
+    const COMMON_TRANSLATIONS = useTranslations('Common')
+    const ERRORS_TRANSLATIONS = useTranslations('Errors')
 
     const onFinish: FormProps<Prisma.BlogPostUncheckedUpdateInput>['onFinish'] =
         async values => {
@@ -56,30 +56,24 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
             setLoading(false)
 
             if (blogPost?.error) {
-                message.error(errorsTranslations(`post/${blogPost.error}`))
+                message.error(ERRORS_TRANSLATIONS(`post/${blogPost.error}`))
             } else {
-                message.success(editPostTranslations('success'))
+                message.success(EDIT_POST_TRANSLATIONS('success'))
                 onClose()
             }
         }
 
     useEffect(() => {
-        const handleResetFields = () => {
-            form.resetFields()
-        }
-        handleResetFields()
+        form.resetFields()
     }, [form])
 
     useEffect(() => {
-        const handleSetFields = () => {
-            form.setFieldsValue(defaultValues)
-        }
-        handleSetFields()
+        form.setFieldsValue(defaultValues)
     }, [defaultValues, form, open])
 
     return (
         <Drawer
-            title={editPostTranslations('title')}
+            title={EDIT_POST_TRANSLATIONS('title')}
             width={520}
             onClose={onClose}
             open={open}
@@ -91,14 +85,14 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
             extra={
                 <Space>
                     <Button onClick={onClose}>
-                        {commonTranslations('cancel')}
+                        {COMMON_TRANSLATIONS('cancel')}
                     </Button>
                     <Button
                         type="primary"
                         onClick={form.submit}
                         loading={loading}
                     >
-                        {commonTranslations('save')}
+                        {COMMON_TRANSLATIONS('save')}
                     </Button>
                 </Space>
             }
@@ -114,7 +108,7 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="title"
-                                label={formTranslations('title_label')}
+                                label={FORM_TRANSLATIONS('title_label')}
                                 rules={[{ required: true, max: 100 }]}
                             >
                                 <Input
@@ -129,7 +123,7 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="subTitle"
-                                label={formTranslations('subtitle_label')}
+                                label={FORM_TRANSLATIONS('subtitle_label')}
                                 rules={[{ max: 191 }]}
                             >
                                 <Input
@@ -144,7 +138,7 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="slug"
-                                label={formTranslations('slug_label')}
+                                label={FORM_TRANSLATIONS('slug_label')}
                                 rules={[
                                     {
                                         required: true,
@@ -166,7 +160,7 @@ export const PostEdit = ({ open, defaultValues, onClose }: Props) => {
                         <Col span={24}>
                             <Form.Item<FieldType>
                                 name="content"
-                                label={formTranslations('content_label')}
+                                label={FORM_TRANSLATIONS('content_label')}
                                 rules={[{ required: true }]}
                             >
                                 <ReactQuill

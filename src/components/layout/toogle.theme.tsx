@@ -5,9 +5,9 @@ import { MoonOutlined, SunOutlined } from '@ant-design/icons'
 
 export const ToogleTheme = () => {
     const { theme, toggleTheme } = useTheme()
-    const t = useTranslations('Layout')
+    const TOOGLE_THEME_TRANSLATIONS = useTranslations('Layout')
     return (
-        <Tooltip title={t('toggle_theme_label')}>
+        <Tooltip title={TOOGLE_THEME_TRANSLATIONS('toggle_theme_label')}>
             <Button onClick={toggleTheme} className="h-9 text-lg" type="text">
                 {theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
             </Button>

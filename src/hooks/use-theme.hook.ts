@@ -1,7 +1,7 @@
-import { UseThemeStore } from '@/stores/theme.store'
+import { useThemeStore } from '@/stores/theme.store'
 
 export const useTheme = () => {
-    const { theme, setTheme } = UseThemeStore()
+    const { theme, setTheme } = useThemeStore()
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light'

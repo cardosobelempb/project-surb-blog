@@ -24,7 +24,7 @@ export const BlogCreateService = async ({
         data: {
             ...data,
             users: {
-                create: [{ role: 'OWNER', userId: user?.user?.id as string }],
+                create: [{ role: 'OWNER', userId: user?.user.id }],
             },
         },
     })
