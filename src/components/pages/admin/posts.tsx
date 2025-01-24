@@ -54,7 +54,7 @@ export const PostsPage: React.FC<Props> = ({ posts }) => {
             title: FORM_TRANSLATIONS('author_label'),
             dataIndex: ['user', 'name'],
             key: 'user.name',
-            sorter: (a, b) => a.user.name.localeCompare(b.user.name),
+            sorter: (a, b) => a.user.name!.localeCompare(b.user.name!),
             sortDirections: ['ascend', 'descend'],
             ellipsis: true,
             render: (_, record) => (
@@ -102,7 +102,7 @@ export const PostsPage: React.FC<Props> = ({ posts }) => {
             <NewBlogPost open={newBlogPostOpen} setOpen={setNewBlogPostOpen} />
             <PostEdit
                 open={!!editBlogPostOpen}
-                onClose={() => setEditNewBlogPostOpen(undefined)}
+                onClose={() => setEditNewBlogPostOpen(undefined!)}
                 defaultValues={editBlogPostOpen}
             />
 

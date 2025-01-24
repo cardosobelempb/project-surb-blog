@@ -23,7 +23,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     users         BlogUser[]
-    posts         BlogPost[]
+    posts         Post[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -32,7 +32,7 @@ model User {
 }
 
 model Account {
-    userId            String  @unique @map("user_id") @db.Uuid
+    id                String  @unique @db.Uuid
     type              String
     provider          String
     providerAccountId String
@@ -47,7 +47,8 @@ model Account {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @unique @map("user_id") @db.Uuid
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@id([provider, providerAccountId])
     @@index([userId])
@@ -55,9 +56,10 @@ model Account {
 }
 
 model Session {
+    id           String   @unique @db.Uuid
     sessionToken String   @unique
-    userId       String   @unique @map("user_id") @db.Uuid
     expires      DateTime
+    userId       String   @unique @map("user_id") @db.Uuid
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
@@ -88,7 +90,7 @@ model Blog {
     updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp
     deletedAt DateTime?  @map("delete_at") @db.Timestamp
     users     BlogUser[]
-    posts     BlogPost[]
+    posts     Post[]
 
     @@map("blogs")
 }
@@ -114,7 +116,7 @@ model BlogUser {
     @@map("blog_users")
 }
 
-model BlogPost {
+model Post {
     id        String    @id @default(uuid()) @db.Uuid
     title     String    @db.VarChar(100)
     subTitle  String?   @map("sub_title") @db.VarChar(100)
