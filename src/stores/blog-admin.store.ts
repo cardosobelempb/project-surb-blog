@@ -1,14 +1,14 @@
-import { BlogUsersWithUsers } from '@/types/Blog'
+import { BlogWithUsers } from '@/types/Blog'
 import { Blog } from '@prisma/client'
 import { create } from 'zustand'
 export type BlogAdminState = {
     blogs: Blog[]
-    blogSelected: BlogUsersWithUsers | null
+    blogSelected: BlogWithUsers | null
 }
 
 export type BlogAdminActions = {
     setBlogs: (blogs: Blog[]) => void
-    setBlogSelected: (blog: BlogUsersWithUsers | null) => void
+    setBlogSelected: (blog: BlogWithUsers | null) => void
 }
 
 export const useBlogAdminStore = create<BlogAdminState & BlogAdminActions>(
